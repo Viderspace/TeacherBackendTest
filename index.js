@@ -18,7 +18,8 @@ app.listen(PORT, () => {
 });
 
 
-const fetch = require('node-fetch'); // if not already installed: npm install node-fetch
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+// const fetch = require('node-fetch'); // if not already installed: npm install node-fetch
 const OPENAI_KEY = process.env.OPENAI_API_KEY;
 
 app.post('/ask', async (req, res) => {
