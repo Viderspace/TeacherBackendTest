@@ -8,10 +8,11 @@ let classMaterial = "";
 
 app.post('/set-material', (req, res) => {
   classMaterial = req.body.text;
-  console.log("Lesson material received:", classMaterial.slice(0, 100));
-  res.json({ status: 'ok' });
+  console.log("Received class material:", classMaterial?.slice(0, 100));
+  res.json({ status: 'ok', message: 'Lesson uploaded!' });
 });
 
-app.listen(10000, () => {
-  console.log('Server running on port 10000');
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
