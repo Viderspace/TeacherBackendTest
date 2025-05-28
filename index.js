@@ -17,7 +17,7 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-
+console.log("🔍 Incoming messages:", messages);
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 // const fetch = require('node-fetch'); // if not already installed: npm install node-fetch
 const OPENAI_KEY = process.env.OPENAI_API_KEY;
@@ -38,7 +38,16 @@ app.post('/ask', async (req, res) => {
     });
 
     const data = await response.json();
-    res.json({ reply: data.choices[0].message.content });
+
+    if (!data.choices || !data.choices[0]) {
+      console.error("❌ Unexpected OpenAI response:", JSON.stringify(data, null, 2));
+      return res.status(500).json({ error: "Invalid GPT response", raw: data });
+    }
+    
+    const reply = data.choices[0].message.content;
+    res.json({ reply });
+
+    
   } catch (err) {
     console.error("❌ GPT-4 Error:", err);
     res.status(500).json({ error: "Failed to fetch GPT-4 response" });
