@@ -25,6 +25,13 @@ const OPENAI_KEY = process.env.OPENAI_API_KEY;
 app.post('/ask', async (req, res) => {
   try {
     const messages = req.body.messages;
+
+    // ⛔ BAD: this was before `messages` was declared
+    // console.log("🔍 Incoming messages:", messages); 
+
+    // ✅ Move it *after* messages is declared:
+    console.log("🔍 Incoming messages:", messages);
+
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -43,11 +50,10 @@ app.post('/ask', async (req, res) => {
       console.error("❌ Unexpected OpenAI response:", JSON.stringify(data, null, 2));
       return res.status(500).json({ error: "Invalid GPT response", raw: data });
     }
-    
+
     const reply = data.choices[0].message.content;
     res.json({ reply });
 
-    
   } catch (err) {
     console.error("❌ GPT-4 Error:", err);
     res.status(500).json({ error: "Failed to fetch GPT-4 response" });
