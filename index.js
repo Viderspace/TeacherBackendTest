@@ -17,7 +17,6 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-console.log("🔍 Incoming messages:", messages);
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 // const fetch = require('node-fetch'); // if not already installed: npm install node-fetch
 const OPENAI_KEY = process.env.OPENAI_API_KEY;
