@@ -9,24 +9,43 @@ let classMaterial = "";
 
 const tutorPrompts = {}; // key: sessionId, value: prompt
 
+// app.post('/set-tutor-prompt', (req, res) => {
+//   const { session, prompt } = req.body;
+//   tutorPrompts[session] = prompt;
+//   res.json({ status: 'ok' });
+// });
+
+// // Save tutor prompt
+// app.post('/set-tutor-prompt', (req, res) => {
+//     const { session, prompt } = req.body;
+//   tutorPrompts[session] = req.body.prompt;
+//   console.log("✅ Tutor prompt saved.");
+//   res.json({ status: 'ok' });
+// });
+
 app.post('/set-tutor-prompt', (req, res) => {
   const { session, prompt } = req.body;
   tutorPrompts[session] = prompt;
+  console.log(`✅ Saved prompt for session: ${session}`);
   res.json({ status: 'ok' });
 });
 
-// Save tutor prompt
-app.post('/set-tutor-prompt', (req, res) => {
-    const { session, prompt } = req.body;
-  tutorPrompts[session] = req.body.prompt;
-  console.log("✅ Tutor prompt saved.");
-  res.json({ status: 'ok' });
-});
+// // Get tutor prompt
+// app.get('/get-tutor-prompt', (req, res) => {
+//   const { session, prompt } = req.body;
+//   res.json({ prompt: tutorPrompts[session] });
+// });
 
-// Get tutor prompt
 app.get('/get-tutor-prompt', (req, res) => {
-  const { session, prompt } = req.body;
-  res.json({ prompt: tutorPrompts[session] });
+  const session = req.query.session || "latest";
+  const prompt = tutorPrompts[session];
+
+  if (!prompt) {
+    console.warn(`⚠️ No prompt found for session: ${session}`);
+    return res.status(404).json({ prompt: null });
+  }
+
+  res.json({ prompt });
 });
 
 app.post('/set-material', (req, res) => {
