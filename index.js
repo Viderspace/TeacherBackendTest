@@ -7,18 +7,26 @@ app.use(express.json());
 let classMaterial = "";
 
 
-let tutorPrompt = ""; // Store the generated tutor prompt
+const tutorPrompts = {}; // key: sessionId, value: prompt
+
+app.post('/set-tutor-prompt', (req, res) => {
+  const { session, prompt } = req.body;
+  tutorPrompts[session] = prompt;
+  res.json({ status: 'ok' });
+});
 
 // Save tutor prompt
 app.post('/set-tutor-prompt', (req, res) => {
-  tutorPrompt = req.body.prompt;
+    const { session, prompt } = req.body;
+  tutorPrompts[session] = req.body.prompt;
   console.log("✅ Tutor prompt saved.");
   res.json({ status: 'ok' });
 });
 
 // Get tutor prompt
 app.get('/get-tutor-prompt', (req, res) => {
-  res.json({ prompt: tutorPrompt });
+  const { session, prompt } = req.body;
+  res.json({ prompt: tutorPrompts[session] });
 });
 
 app.post('/set-material', (req, res) => {
@@ -73,3 +81,4 @@ app.post('/ask', async (req, res) => {
     res.status(500).json({ error: "Failed to fetch GPT-4 response" });
   }
 });
+
